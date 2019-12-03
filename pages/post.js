@@ -7,6 +7,7 @@ import config from '../Config'
 import ImageSlide from './ImageSlide';
 import Moment from 'react-moment';
 import userlike from './userlike';
+import Likecount from './likecount';
 
 const { TextArea } = Input;
 const BASE_URL = config.BASE_URL;
@@ -334,7 +335,9 @@ export default class post extends Component {
                             </div>
                             <div className="card-footer">
                                 {/* <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" /> <span style={{ fontSize:12}}> 24</span> */}
-                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} /> <span style={{ fontSize: 12 }} onClick={() => this.likeShowUser(item.id,item.tcount)}> {item.tcount > 0 ? item.tcount : ''}</span>
+                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} /> 
+                                <span style={{ fontSize: 12 }} onClick={() => this.likeShowUser(item.id,item.tcount)}> <Likecount id={item.id} />
+                                </span>
                             </div>
                         </div>
                     </div>
