@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css'
 import { Input, Button, Upload, Modal, Icon, notification, message } from 'antd';
+import { Table } from 'reactstrap';
 import axios from 'axios';
 import config from '../Config'
 import ImageSlide from './ImageSlide';
 import Moment from 'react-moment';
+import userlike from './userlike';
 
 const { TextArea } = Input;
 const BASE_URL = config.BASE_URL;
@@ -38,7 +39,13 @@ export default class post extends Component {
             data: [],
             countLike: 0,
             likeColor: '#9C9C9C',
-            idLike: 0
+            idLike: 0,
+
+            visible: false,
+            post_like_id: 0,
+
+            dataLike: [],
+            total:0
 
 
 
@@ -214,14 +221,54 @@ export default class post extends Component {
         }
 
     }
-
+    
     msgLike = () => {
         message.success('กดหัวใจรัวๆ');
     };
 
+    handleOk = e => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    handleCancel = e => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    likeShowUser = (id,total) => {
+        this.getLikeUser(id)
+        this.setState({
+            visible: true,
+            post_like_id: id,
+            total:total
+        })
+
+
+    }
+
+    getLikeUser = async (id) => {
+
+
+        try {
+            const res = await axios.get(`${BASE_URL}/get-like-user/${id}`)
+            console.log(res)
+            this.setState({
+                dataLike: res.data
+            })
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
 
     render() {
-        const { fileList, previewVisible, previewImage, data } = this.state
+        const { fileList, previewVisible, previewImage, data, dataLike } = this.state
         const uploadButton = (
             <div>
                 <Icon type="plus" />
@@ -287,11 +334,41 @@ export default class post extends Component {
                             </div>
                             <div className="card-footer">
                                 {/* <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" /> <span style={{ fontSize:12}}> 24</span> */}
-                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} /> <span style={{ fontSize: 12 }}> {item.tcount > 0 ? item.tcount : ''}</span>
+                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} /> <span style={{ fontSize: 12 }} onClick={() => this.likeShowUser(item.id,item.tcount)}> {item.tcount > 0 ? item.tcount : ''}</span>
                             </div>
                         </div>
                     </div>
                 })}
+
+                <Modal
+                    title={"ทั้งหมด " + this.state.total }
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                    <Table dark>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>usrname</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataLike.map((item,i) => {
+                                return <tr>
+                            <th scope="row">{i+1}</th>
+                            <td>{item.username}</td>
+
+                                </tr>
+                            })}
+
+
+                        </tbody>
+                    </Table>
+
+
+
+                </Modal>
             </>
         )
     }
