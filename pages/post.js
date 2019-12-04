@@ -46,7 +46,8 @@ export default class post extends Component {
             post_like_id: 0,
 
             dataLike: [],
-            total:0
+            total: 0,
+            isLoading: false
 
 
 
@@ -182,12 +183,15 @@ export default class post extends Component {
 
 
     getPost = async (id, token) => {
+        this.setState({
+            isLoading: true
+        })
         await axios.get(`${BASE_URL}/get-post`)
             .then(res => {
 
                 this.setState({
                     data: res.data,
-
+                    isLoading: false
                 })
 
             })
@@ -222,7 +226,7 @@ export default class post extends Component {
         }
 
     }
-    
+
     msgLike = () => {
         message.success('กดหัวใจรัวๆ');
     };
@@ -239,12 +243,12 @@ export default class post extends Component {
         });
     };
 
-    likeShowUser = (id,total) => {
+    likeShowUser = (id, total) => {
         this.getLikeUser(id)
         this.setState({
             visible: true,
             post_like_id: id,
-            total:total
+            total: total
         })
 
 
@@ -281,6 +285,8 @@ export default class post extends Component {
                 <div style={{ textAlign: 'center', marginTop: 5 }}>
                     <Button shape="circle" icon="reload" onClick={this.clickReload} />
                 </div>
+
+
                 <div style={{ textAlign: 'left', marginTop: 10 }}>
 
                     {/* {console.log(this.props.url.query.username)} */}
@@ -318,8 +324,19 @@ export default class post extends Component {
 
 
                 </div>
+                {this.state.isLoading &&
+                    <div style={{ textAlign: 'center', marginTop: 10 }}>
+                        <div class="spinner-border text-danger" role="status" >
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-border text-warning" role="status" style={{ marginLeft: 10 }}>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-border text-info" role="status" style={{ marginLeft: 10 }}>
+                            <span class="sr-only">Loading...</span>
+                        </div>
 
-
+                    </div>}
 
                 {data.map((item, i) => {
                     return <div className="row justify-content-center" style={{ marginTop: 10 }}>
@@ -335,8 +352,8 @@ export default class post extends Component {
                             </div>
                             <div className="card-footer">
                                 {/* <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" /> <span style={{ fontSize:12}}> 24</span> */}
-                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} /> 
-                                <span style={{ fontSize: 12 }} onClick={() => this.likeShowUser(item.id,item.tcount)}> <Likecount id={item.id} />
+                                <Icon onClick={() => this.onLike(item.id)} type="heart" theme="twoTone" twoToneColor={this.state.idLike == item.id ? this.state.likeColor : '#9C9C9C'} />
+                                <span style={{ fontSize: 12 }} onClick={() => this.likeShowUser(item.id, item.tcount)}> {" "}<Likecount id={item.id} />
                                 </span>
                             </div>
                         </div>
@@ -344,7 +361,7 @@ export default class post extends Component {
                 })}
 
                 <Modal
-                    title={"ทั้งหมด " + this.state.total }
+                    title={"ทั้งหมด " + this.state.total}
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
@@ -357,10 +374,10 @@ export default class post extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {dataLike.map((item,i) => {
+                            {dataLike.map((item, i) => {
                                 return <tr>
-                            <th scope="row">{i+1}</th>
-                            <td>{item.username}</td>
+                                    <th scope="row">{i + 1}</th>
+                                    <td>{item.username}</td>
 
                                 </tr>
                             })}
