@@ -20,10 +20,10 @@ export default class likecount extends Component {
     }
 
     getCount = async (id) => {
-        console.log(id)
+     
         await axios.get(`${BASE_URL}/get-like-count/${id}`)
             .then(res => {
-                console.log(res)
+               
                 this.setState({
                     data: res.data[0],
 
