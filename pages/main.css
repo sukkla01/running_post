@@ -34,3 +34,12 @@
         width: 80%;
     }
   }
+
+
+  .image-gallery-slides {
+    line-height: 0;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+    border-radius: 5px;
+}
