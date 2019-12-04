@@ -52,12 +52,13 @@ export default class ImageSlide extends Component {
                     <ImageGallery
                         items={this.state.dataImage}
                         showNav={true}
-                        showIndex={true}
+                        showIndex={ this.state.dataImage.length == 1 ?  false : true}
                         showBullets={false}
                         showFullscreenButton={false}
-                        // showThumbnails={false}
-                        thumbnailPosition = "right"
-                    //slideDuration = {600}
+                        showThumbnails={this.state.dataImage.length == 1 ?  false : true}
+                        thumbnailPosition ={ this.state.dataImage.length == 1 ? "bottom" : "right" } 
+                        showPlayButton ={ this.state.dataImage.length == 1 ? false : true}
+                    //slideDuration = {600}s
 
                     />
                 }
